@@ -7,6 +7,9 @@ router.post('/', (req, res, next) => {
 
 /* GET user show. */
 router.get('/:id', (req, res, next) => {
+  res.json({
+    message: "hello"
+  });
 });
 
 /* PUT user */

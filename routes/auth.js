@@ -1,4 +1,4 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
 
 /* POST auth/users */
@@ -21,3 +21,5 @@ router.post('/admins', (req, res, next) => {
 router.delete('/admins/:id', (req, res, next) => {
 
 });
+
+module.exports = router;
