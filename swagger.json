@@ -1,0 +1,583 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Documentation for term project.",
+    "version": "1.0.0",
+    "title": "This is an API"
+  },
+  "tags": [
+    {
+      "name": "users",
+      "description": "User info"
+    },
+    {
+      "name": "endpoints",
+      "description": "Endpoint info"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User successfully created.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "endpoint_count": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid syntax."
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully logged in. Responds with user id.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          "400": {
+            "description": "Invalid syntax."
+          },
+          "401": {
+            "description": "Invalid username/password supplied."
+          }
+        }
+      }
+    },
+    "/auth/{id}": {
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Logs user out of the system.",
+        "description": "",
+        "operationId": "logoutUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Successfully logged out user."
+          },
+          "400": {
+            "description": "Invalid id supplied."
+          },
+          "401": {
+            "description": "User is not logged in."
+          },
+          "404": {
+            "description": "User does not exist."
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user by id",
+        "description": "",
+        "operationId": "getUserById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The user's id. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully obtained user information.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "endpoint_count": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "User information has not changed."
+          },
+          "400": {
+            "description": "Invalid id supplied."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Updated user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user that needs to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully updated.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "endpoint_count": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user parameters supplied."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully logged out user."
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/{id}/endpoints": {
+      "get": {
+        "tags": [
+          "endpoints"
+        ],
+        "summary": "Get endpoints by user id.",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getEndpointByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The user's id.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Endpoint"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized to view this user's endpoints."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "endpoints"
+        ],
+        "summary": "Create new endpoint for user.",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createEndpointByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The user's id.",
+            "required": true,
+            "type": "string"
+          }, 
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New endpoint.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Endpoint"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Endpoint successfully created.",
+            "schema": {
+              "$ref": "#/definitions/Endpoint"
+            }
+          },
+          "400": {
+            "description": "Invalid syntax."
+          },
+          "401": {
+            "description": "Unauthorized to create endpoint for this user."
+          }
+        }
+      }
+    },
+    "/users/{id}/endpoints/{name}": {
+      "get": {
+        "tags": [
+          "endpoints"
+        ],
+        "summary": "Get endpoint by name",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getEndpointByName",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The user's id.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The endpoint's name.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User-defined data for this endpoint.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }, 
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized to view this user's endpoints."
+          },
+          "404": {
+            "description": "Not found."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "endpoints"
+        ],
+        "summary": "Updated endpoint",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateEndpoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the endpoint that needs to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The endpoint's name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated endpoint object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Endpoint"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Endpoint successfully updated.",
+            "schema": {
+              "$ref": "#/definitions/Endpoint"
+            }
+          },
+          "400": {
+            "description": "Invalid endpoint parameters supplied."
+          },
+          "404": {
+            "description": "Endpoint not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "endpoints"
+        ],
+        "summary": "Delete endpoint",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteEndpoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the endpoint that needs to be deleted",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The endpoint's name.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted endpoint."
+          },
+          "400": {
+            "description": "Invalid id or name supplied"
+          },
+          "404": {
+            "description": "Endpoint not found"
+          }
+        }
+      }
+    },
+    "/requests": {
+      "get": {
+        "tags": [
+          "requests"
+        ],
+        "summary": "Get API request data.",
+        "description": "This can only be done by the logged in admin.",
+        "operationId": "getRequests",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Request"
+              }
+            }
+          },
+          "304": {
+            "description": "Not modified."
+          },
+          "401": {
+            "description": "Unauthorized to view the request data."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Endpoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "Request": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE"
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
