@@ -1,12 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const reqTracker = require('../middleware/reqTracker');
-
+const pool = require('../db');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 /* POST users */
 router.post('/', reqTracker, (req, res, next) => {
-  res.json({
-    message: "post users"
+  let name = req.fields.name;
+  let username = req.fields.username;
+  let password = req.fields.password;
+
+  bcrypt.hash(password, saltRounds, (err, hash) =>{
+    pool.query(`
+    INSERT INTO users (name, username, password)
+      VALUES ('${name}', '${username}', '${hash}');
+    `, (err, result) => {
+      if (err) throw err;
+    });
+    res.json({
+      message: "post users"
+    });
   });
 });
 
@@ -26,6 +40,13 @@ router.put('/:id', reqTracker, (req, res, next) => {
 
 /* DELETE user */
 router.delete('/:id', reqTracker, (req, res, next) => {
+  let id = req.params.id;
+  pool.query(`
+  DELETE FROM users
+    WHERE id='${id}';
+  `, (err, result) => {
+    if (err) throw err;
+  });
   res.json({
     message: "hello"
   });

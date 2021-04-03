@@ -9,6 +9,7 @@ const requestsRouter = require('./routes/requests');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const cors = require('cors');
+const formidable = require('express-formidable');
 
 const corsOptions = {
   origin: 'https://thisisanapiclient.herokuapp.com',
@@ -21,6 +22,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(formidable());
 
 app.use('/api/v1', indexRouter);
 app.use('/api/v1/users', usersRouter);
