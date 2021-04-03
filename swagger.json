@@ -58,7 +58,7 @@
                 "name": {
                   "type": "string"
                 },
-                "email": {
+                "username": {
                   "type": "string"
                 },
                 "endpoint_count": {
@@ -86,9 +86,9 @@
         ],
         "parameters": [
           {
-            "name": "email",
+            "name": "username",
             "in": "query",
-            "description": "The email for login",
+            "description": "The username for login",
             "required": true,
             "type": "string"
           },
@@ -111,7 +111,7 @@
             "description": "Invalid syntax."
           },
           "401": {
-            "description": "Invalid email/password supplied."
+            "description": "Invalid username/password supplied."
           }
         }
       }
@@ -157,9 +157,9 @@
         ],
         "parameters": [
           {
-            "name": "email",
+            "name": "username",
             "in": "query",
-            "description": "The email for login",
+            "description": "The username for login",
             "required": true,
             "type": "string"
           },
@@ -182,7 +182,7 @@
             "description": "Invalid syntax."
           },
           "401": {
-            "description": "Invalid email/password supplied."
+            "description": "Invalid username/password supplied."
           }
         }
       }
@@ -244,7 +244,7 @@
                 "name": {
                   "type": "string"
                 },
-                "email": {
+                "username": {
                   "type": "string"
                 },
                 "endpoint_count": {
@@ -304,7 +304,7 @@
                 "name": {
                   "type": "string"
                 },
-                "email": {
+                "username": {
                   "type": "string"
                 },
                 "endpoint_count": {
@@ -612,7 +612,7 @@
         "name": {
           "type": "string"
         },
-        "email": {
+        "username": {
           "type": "string"
         },
         "password": {
