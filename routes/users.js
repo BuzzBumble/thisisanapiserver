@@ -26,21 +26,45 @@ router.post('/', reqTracker, (req, res, next) => {
 
 /* GET user show. */
 router.get('/:id', reqTracker, (req, res, next) => {
-  res.json({
-    message: "hello"
+  let id = req.params.id;
+
+  pool.query(`
+  SELECT name, username FROM users
+    WHERE id='${id}';
+  `, (err, result) => {
+    if (err) throw err;
+    res.json({
+      name: result.rows[0].name,
+      username: result.rows[0].username
+    });
   });
 });
 
 /* PUT user */
 router.put('/:id', reqTracker, (req, res, next) => {
-  res.json({
-    message: "hello"
+  let id = req.params.id;
+  let name = req.fields.name;
+  let username = req.fields.username;
+  let password = req.fields.password;
+
+  bcrypt.hash(password, saltRounds, (err, hash) =>{
+    pool.query(`
+    UPDATE users
+      SET name='${name}', username='${username}', password='${hash}'
+      WHERE id='${id}';
+    `, (err, result) => {
+      if (err) throw err;
+    });
+    res.json({
+      message: "put users"
+    });
   });
 });
 
 /* DELETE user */
 router.delete('/:id', reqTracker, (req, res, next) => {
   let id = req.params.id;
+  
   pool.query(`
   DELETE FROM users
     WHERE id='${id}';
@@ -48,7 +72,7 @@ router.delete('/:id', reqTracker, (req, res, next) => {
     if (err) throw err;
   });
   res.json({
-    message: "hello"
+    message: "delete users"
   });
 });
 
