@@ -49,21 +49,21 @@ router.post('/:id/endpoints/', reqTracker, (req, res, next) => {
 });
 
 /* GET user endpoint show */
-router.get('/:id/endpoints/:endpoint_id', reqTracker, (req, res, next) => {
+router.get('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
   res.json({
     message: "hello"
   });
 });
 
 /* PUT user endpoint */
-router.put('/:id/endpoints/:endpoint_id', reqTracker, (req, res, next) => {
+router.put('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
   res.json({
     message: "hello"
   });
 });
 
 /* DELETE user endpoint */
-router.delete('/:id/endpoints/:endpoint_id', reqTracker, (req, res, next) => {
+router.delete('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
   res.json({
     message: "hello"
   });

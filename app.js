@@ -22,9 +22,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/requests', requestsRouter);
+app.use('/api/v1', indexRouter);
+app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/requests', requestsRouter);
 
 app.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

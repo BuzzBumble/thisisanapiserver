@@ -11,6 +11,10 @@
       "description": "User info"
     },
     {
+      "name": "auth",
+      "description": "Authentication"
+    },
+    {
       "name": "endpoints",
       "description": "Endpoint info"
     }
@@ -69,10 +73,10 @@
         }
       }
     },
-    "/auth": {
+    "/auth/users": {
       "post": {
         "tags": [
-          "users"
+          "auth"
         ],
         "summary": "Logs user into the system",
         "description": "",
@@ -107,15 +111,15 @@
             "description": "Invalid syntax."
           },
           "401": {
-            "description": "Invalid username/password supplied."
+            "description": "Invalid email/password supplied."
           }
         }
       }
     },
-    "/auth/{id}": {
+    "/auth/users/{id}": {
       "delete": {
         "tags": [
-          "users"
+          "auth"
         ],
         "summary": "Logs user out of the system.",
         "description": "",
@@ -136,6 +140,77 @@
           },
           "404": {
             "description": "User does not exist."
+          }
+        }
+      }
+    },
+    "/auth/admins": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs admin into the system",
+        "description": "",
+        "operationId": "loginAdmin",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email for login",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully logged in. Responds with admin id.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          "400": {
+            "description": "Invalid syntax."
+          },
+          "401": {
+            "description": "Invalid email/password supplied."
+          }
+        }
+      }
+    },
+    "/auth/admins/{id}": {
+      "delete": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs admin out of the system.",
+        "description": "",
+        "operationId": "logoutAdmin",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Successfully logged out admin."
+          },
+          "400": {
+            "description": "Invalid id supplied."
+          },
+          "401": {
+            "description": "Admin is not logged in."
+          },
+          "404": {
+            "description": "Admin does not exist."
           }
         }
       }
