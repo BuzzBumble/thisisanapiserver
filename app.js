@@ -8,9 +8,15 @@ const authRouter = require('./routes/auth');
 const requestsRouter = require('./routes/requests');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+const cors = require('cors');
+
+const corsOptions = {
+  origin: 'https://thisisanapiclient.herokuapp.com',
+}
 
 const app = express();
 
+app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
