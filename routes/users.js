@@ -33,10 +33,15 @@ router.get('/:id', reqTracker, (req, res, next) => {
     WHERE id='${id}';
   `, (err, result) => {
     if (err) throw err;
-    res.json({
-      name: result.rows[0].name,
-      username: result.rows[0].username
-    });
+    
+    if(!res.rows) {
+      res.status(404).json({message: "User not found."});
+    } else {
+      res.json({
+        name: result.rows[0].name,
+        username: result.rows[0].username
+      });
+    }
   });
 });
 
@@ -54,9 +59,15 @@ router.put('/:id', reqTracker, (req, res, next) => {
       WHERE id='${id}';
     `, (err, result) => {
       if (err) throw err;
-    });
-    res.json({
-      message: "put users"
+
+      if(!res.rows) {
+        res.status(404).json({message: "User not found."});
+      } else {
+        res.json({
+          name: result.rows[0].name,
+          username: result.rows[0].username
+        });
+      }
     });
   });
 });
@@ -70,9 +81,15 @@ router.delete('/:id', reqTracker, (req, res, next) => {
     WHERE id='${id}';
   `, (err, result) => {
     if (err) throw err;
-  });
-  res.json({
-    message: "delete users"
+
+    if(!res.rows) {
+      res.status(404).json({message: "User not found."});
+    } else {
+      res.json({
+        name: result.rows[0].name,
+        username: result.rows[0].username
+      });
+    }
   });
 });
 
