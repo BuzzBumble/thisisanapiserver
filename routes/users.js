@@ -34,7 +34,7 @@ router.get('/:id', reqTracker, (req, res, next) => {
   `, (err, result) => {
     if (err) throw err;
     
-    if(!res.rows) {
+    if(!result.rows[0]) {
       res.status(404).json({message: "User not found."});
     } else {
       res.json({
@@ -60,7 +60,7 @@ router.put('/:id', reqTracker, (req, res, next) => {
     `, (err, result) => {
       if (err) throw err;
 
-      if(!res.rows) {
+      if(!result.rows[0]) {
         res.status(404).json({message: "User not found."});
       } else {
         res.json({
@@ -82,7 +82,7 @@ router.delete('/:id', reqTracker, (req, res, next) => {
   `, (err, result) => {
     if (err) throw err;
 
-    if(!res.rows) {
+    if(!result.rows[0]) {
       res.status(404).json({message: "User not found."});
     } else {
       res.json({
