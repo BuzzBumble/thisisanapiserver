@@ -20,7 +20,7 @@ router.post('/users', (req, res, next) => {
         bcrypt.compare(password, user.password, (err, same) => {
           if (err) throw err;
           if (same) {
-            res.json({ id: user.id });
+            res.status(201).json({ id: user.id });
           } else {
             res.status(401).json({error: "Wrong password" });
           }

@@ -32,9 +32,14 @@ router.get('/:id', reqTracker, (req, res, next) => {
   SELECT name, username FROM users
     WHERE id='${id}';
   `, (err, result) => {
-    if (err) throw err;
+    if (err) {
+      res.status(400).json({
+        error: err.message
+      });
+      return;
+    }
     
-    if(!result.rows[0]) {
+    if(result.rows === undefined || result.rows.length === 0) {
       res.status(404).json({message: "User not found."});
     } else {
       res.json({
