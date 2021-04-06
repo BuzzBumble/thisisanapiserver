@@ -14,12 +14,12 @@ router.post('/', reqTracker, (req, res, next) => {
   bcrypt.hash(password, saltRounds, (err, hash) =>{
     pool.query(`
     INSERT INTO users (name, username, password)
-      VALUES ('${name}', '${username}', '${hash}');
+      VALUES ('${name}', '${username}', '${hash}')
+      RETURNING id;
     `, (err, result) => {
       if (err) throw err;
-    });
-    res.json({
-      message: "post users"
+
+      res.json(result.rows[0]);
     });
   });
 });
