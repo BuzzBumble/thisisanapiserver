@@ -5,8 +5,8 @@ const pool = require('../db');
 
 /* POST auth/users */
 router.post('/users', (req, res, next) => {
-  const username = req.fields.username;
-  const password = req.fields.password;
+  const username = req.body.username;
+  const password = req.body.password;
 
   pool.query(
     `SELECT * FROM users WHERE username=$1;`,

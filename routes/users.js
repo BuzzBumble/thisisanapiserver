@@ -7,9 +7,9 @@ const saltRounds = 10;
 
 /* POST users */
 router.post('/', reqTracker, (req, res, next) => {
-  let name = req.fields.name;
-  let username = req.fields.username;
-  let password = req.fields.password;
+  let name = req.body.name;
+  let username = req.body.username;
+  let password = req.body.password;
 
   bcrypt.hash(password, saltRounds, (err, hash) =>{
     pool.query(`
