@@ -1,3 +1,4 @@
+const env = process.env.NODE_ENV || 'development';
 const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -15,6 +16,10 @@ const corsOptions = {
   origin: 'https://thisisanapiclient.herokuapp.com',
 }
 
+if (env === 'development') {
+  corsOptions.origin = '*';
+}
+
 const app = express();
 
 app.use(cors(corsOptions));
@@ -26,6 +31,7 @@ app.use(formidable());
 
 app.use('/api/v1', indexRouter);
 app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/requests', requestsRouter);
 
 app.use('/api/v1/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
