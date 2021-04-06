@@ -14,18 +14,15 @@ router.post('/users', (req, res, next) => {
     (err, result) => {
       if (err) throw err;
       if (result.rows.length === 0) {
-        console.log("User not found");
-        res.status(404).json({message: "User not found."});
+        res.status(401).json({error: "User not found."});
       } else {
         const user = result.rows[0];
         bcrypt.compare(password, user.password, (err, same) => {
           if (err) throw err;
           if (same) {
             res.json({ id: user.id });
-            console.log(`User ID: ${user.id}`);
           } else {
-            res.json({ error: "Wrong password" });
-            console.log("Wrong password");
+            res.status(401).json({error: "Wrong password" });
           }
         })
       }
