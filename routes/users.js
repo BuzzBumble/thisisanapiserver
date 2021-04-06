@@ -55,28 +55,23 @@ router.put('/:id', reqTracker, (req, res, next) => {
   let id = req.params.id;
   let name = req.body.name;
   let username = req.body.username;
-  let password = req.body.password;
 
-  bcrypt.hash(password, saltRounds, (err, hash) =>{
-    pool.query(`
-    UPDATE users
-      SET name='${name}', username='${username}', password='${hash}'
-      WHERE id='${id}'
-      RETURNING name, username;
-    `, (err, result) => {
-      if (err) throw err;
+  pool.query(`
+  UPDATE users
+    SET name='${name}', username='${username}'
+    WHERE id='${id}'
+    RETURNING name, username;
+  `, (err, result) => {
+    if (err) throw err;
 
-      console.log(result);
-
-      if(!result.rows[0]) {
-        res.status(404).json({message: "User not found."});
-      } else {
-        res.json({
-          name: result.rows[0].name,
-          username: result.rows[0].username
-        });
-      }
-    });
+    if(!result.rows[0]) {
+      res.status(404).json({message: "User not found."});
+    } else {
+      res.json({
+        name: result.rows[0].name,
+        username: result.rows[0].username
+      });
+    }
   });
 });
 
