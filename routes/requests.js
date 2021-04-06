@@ -8,7 +8,8 @@ router.get('/', (req, res, next) => {
   pool.query(`
   SELECT path, method, COUNT(path)
     FROM requests
-      GROUP BY path, method;
+      GROUP BY path, method
+      ORDER BY COUNT(path) DESC;
   `, (err, result) => {
     if (err) throw err;
 

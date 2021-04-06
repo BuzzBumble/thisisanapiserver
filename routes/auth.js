@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const pool = require('../db');
+const reqTracker = require('../middleware/reqTracker');
 
 /* POST auth/users */
-router.post('/users', (req, res, next) => {
+router.post('/users', reqTracker, (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
 
@@ -31,18 +32,17 @@ router.post('/users', (req, res, next) => {
 });
 
 /* DELETE auth/users */
-router.delete('/users/:id', (req, res, next) => {
+router.delete('/users/:id',  reqTracker,(req, res, next) => {
 
 });
 
-
 /* POST auth/admins */
-router.post('/admins', (req, res, next) => {
+router.post('/admins', reqTracker, (req, res, next) => {
 
 });
 
 /* DELETE auth/admins */
-router.delete('/admins/:id', (req, res, next) => {
+router.delete('/admins/:id', reqTracker, (req, res, next) => {
 
 });
 

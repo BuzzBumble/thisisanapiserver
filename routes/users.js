@@ -19,7 +19,7 @@ router.post('/', reqTracker, (req, res, next) => {
     `, (err, result) => {
       if (err) throw err;
 
-      res.json(result.rows[0]);
+      res.status(201).json(result.rows[0]);
     });
   });
 });
