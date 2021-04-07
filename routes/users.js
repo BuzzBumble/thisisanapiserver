@@ -11,16 +11,23 @@ router.post('/', reqTracker, (req, res, next) => {
   let username = req.body.username;
   let password = req.body.password;
 
-  bcrypt.hash(password, saltRounds, (err, hash) =>{
-    pool.query(`
-    INSERT INTO users (name, username, password)
-      VALUES ('${name}', '${username}', '${hash}')
-      RETURNING id;
-    `, (err, result) => {
-      if (err) throw err;
-
-      res.status(201).json(result.rows[0]);
-    });
+  pool.query(`SELECT * FROM users WHERE username='${username}';`, (err, result) => {
+    if (err) throw err;
+    if (result.rows === undefined || result.rows.length === 0) {
+      bcrypt.hash(password, saltRounds, (err, hash) =>{
+        pool.query(`
+        INSERT INTO users (name, username, password)
+          VALUES ('${name}', '${username}', '${hash}')
+          RETURNING id;
+        `, (err, result) => {
+          if (err) throw err;
+    
+          res.status(201).json(result.rows[0]);
+        });
+      });
+    } else {
+      throw err;
+    }
   });
 });
 
