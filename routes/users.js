@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const reqTracker = require('../middleware/reqTracker');
-const pool = require('../db');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+
+const dbUsers = require('../db/users');
+const pw = require('../helpers/passwords');
 
 /* POST users */
 router.post('/', reqTracker, (req, res, next) => {
@@ -11,23 +11,25 @@ router.post('/', reqTracker, (req, res, next) => {
   let username = req.body.username;
   let password = req.body.password;
 
-  pool.query(`SELECT * FROM users WHERE username='${username}';`, (err, result) => {
-    if (err) throw err;
-    if (result.rows === undefined || result.rows.length === 0) {
-      bcrypt.hash(password, saltRounds, (err, hash) =>{
-        pool.query(`
-        INSERT INTO users (name, username, password)
-          VALUES ('${name}', '${username}', '${hash}')
-          RETURNING id;
-        `, (err, result) => {
-          if (err) throw err;
-    
+  dbUsers.getUserByUsername(username).then(result => {
+    const resultExists = result.rows !== undefined && result.rows.length > 0;
+
+    if (!resultExists) {
+      pw.hashPassword(password).then(hash => {
+        dbUsers.createUser(name, username, hash).then(result => {
           res.status(201).json(result.rows[0]);
+        }).catch(err => {
+          throw err;
         });
+      }).catch(err => {
+        throw err;
       });
     } else {
-      throw err;
+      res.status(400).json({ error: "Username already exists" });
     }
+
+  }).catch(err => {
+    throw err;
   });
 });
 
@@ -35,25 +37,19 @@ router.post('/', reqTracker, (req, res, next) => {
 router.get('/:id', reqTracker, (req, res, next) => {
   let id = req.params.id;
 
-  pool.query(`
-  SELECT name, username FROM users
-    WHERE id='${id}';
-  `, (err, result) => {
-    if (err) {
-      res.status(400).json({
-        error: err.message
-      });
-      return;
-    }
-    
-    if(result.rows === undefined || result.rows.length === 0) {
+  dbUsers.getUserById(id).then(result => {
+    const resultExists = result.rows !== undefined && result.rows.length > 0;
+
+    if (!resultExists) {
       res.status(404).json({message: "User not found."});
     } else {
-      res.json({
-        name: result.rows[0].name,
-        username: result.rows[0].username
-      });
+      const user = result.rows[0];
+      res.status(200).json(user);
     }
+  }).catch(err => {
+    res.status(400).json({
+      error: err.message
+    });
   });
 });
 
@@ -63,22 +59,17 @@ router.put('/:id', reqTracker, (req, res, next) => {
   let name = req.body.name;
   let username = req.body.username;
 
-  pool.query(`
-  UPDATE users
-    SET name='${name}', username='${username}'
-    WHERE id='${id}'
-    RETURNING name, username;
-  `, (err, result) => {
-    if (err) throw err;
+  dbUsers.updateUser(id, name, username).then(result => {
+    const resultExists = result.rows !== undefined && result.rows.length > 0;
 
-    if(!result.rows[0]) {
+    if(!resultExists) {
       res.status(404).json({message: "User not found."});
     } else {
-      res.json({
-        name: result.rows[0].name,
-        username: result.rows[0].username
-      });
+      const user = result.rows[0];
+      res.json(user);
     }
+  }).catch(err => {
+    throw err;
   });
 });
 
@@ -86,20 +77,14 @@ router.put('/:id', reqTracker, (req, res, next) => {
 router.delete('/:id', reqTracker, (req, res, next) => {
   let id = req.params.id;
   
-  pool.query(`
-  DELETE FROM users
-    WHERE id='${id}';
-  `, (err, result) => {
-    if (err) throw err;
-
-    if(!result.rows[0]) {
+  dbUsers.deleteUser(id).then(result => {
+    if(result.rowCount === 0) {
       res.status(404).json({message: "User not found."});
     } else {
-      res.json({
-        name: result.rows[0].name,
-        username: result.rows[0].username
-      });
+      res.json({ message: "User successfully deleted" });
     }
+  }).catch(err => {
+    throw err;
   });
 });
 

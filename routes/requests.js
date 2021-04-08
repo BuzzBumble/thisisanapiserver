@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db');
+const pool = require('../db/db');
 
 /* GET requests index */
 router.get('/', (req, res, next) => {

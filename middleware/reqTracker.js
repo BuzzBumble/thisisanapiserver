@@ -1,4 +1,4 @@
-const pool = require('../db');
+const pool = require('../db/db');
 
 const reqTracker = (req, res, next) => {
   let path = req.baseUrl + req.route.path;
