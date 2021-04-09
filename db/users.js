@@ -42,7 +42,7 @@ const updateUser = (id, name, username) => {
 const deleteUser = (id) => {
   const query = `
   DELETE FROM users
-    WHERE id=$1
+    WHERE id=$1;
   `;
 
   return pool.query(query, [id]);

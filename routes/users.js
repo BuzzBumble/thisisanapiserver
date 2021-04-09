@@ -5,6 +5,8 @@ const reqTracker = require('../middleware/reqTracker');
 const dbUsers = require('../db/users');
 const pw = require('../helpers/passwords');
 
+const dbEndpoints= require('../db/endpoints');
+
 /* POST users */
 router.post('/', reqTracker, (req, res, next) => {
   let name = req.body.name;
@@ -93,36 +95,90 @@ router.delete('/:id', reqTracker, (req, res, next) => {
 
 /* GET user endpoints index */
 router.get('/:id/endpoints', reqTracker, (req, res, next) => {
-  res.json({
-    message: "hello"
+  let id = req.params.id;
+
+  dbEndpoints.getEndpointsByUserId(id).then(result => {
+    const resultExists = result.rows !== undefined && result.rows.length > 0;
+    if (!resultExists) {
+      res.status(404).json({message: "Endpoint not found."});
+    } else {
+      res.json(result.rows);
+    }
+  }).catch(err => {
+    throw err;
   });
 });
 
 /* POST user endpoints */
 router.post('/:id/endpoints/', reqTracker, (req, res, next) => {
-  res.json({
-    message: "hello"
+  let id = req.params.id;
+  let name = req.body.name;
+  let data = req.body.data;
+
+  dbEndpoints.createEndpoint(id, name, data).then(result => {
+    const resultExists = result.rows !== undefined && result.rows.length > 0;
+    if (!resultExists) {
+      res.status(401).json({message: "Could not create."});
+    } else {
+      const endpoint = result.rows[0];
+      res.status(201).json(endpoint);
+    }
+  }).catch(err => {
+    throw err;
   });
 });
 
 /* GET user endpoint show */
 router.get('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
-  res.json({
-    message: "hello"
+  let id = req.params.id;
+  let name = req.params.endpoint_name;
+
+  dbEndpoints.getEndpointByName(id, name).then(result => {
+    const resultExists = result.rows !== undefined && result.rows.length > 0;
+    if (!resultExists) {
+      res.status(404).json({message: "Endpoint not found."});
+    } else {
+      const endpoint = result.rows[0];
+      res.json(endpoint);
+    }
+  }).catch(err => {
+    throw err;
   });
 });
 
 /* PUT user endpoint */
 router.put('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
-  res.json({
-    message: "hello"
+  let id = req.params.id;
+  let originalName = req.params.endpoint_name;
+  let name = req.body.name;
+  let data = req.body.data;
+
+  dbEndpoints.updateEndpoint(name, data, id, originalName).then(result => {
+    const resultExists = result.rows !== undefined && result.rows.length > 0;
+    if (!resultExists) {
+      res.status(404).json({message: "Endpoint not found."});
+    } else {
+      const endpoint = result.rows[0];
+      res.json(endpoint);
+    }
+  }).catch(err => {
+    throw err;
   });
 });
 
 /* DELETE user endpoint */
 router.delete('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
-  res.json({
-    message: "hello"
+  let id = req.params.id;
+  let name = req.params.endpoint_name;
+  
+  dbEndpoints.deleteEndpoint(id, name).then(result => {
+    if (result.rowCount === 0) {
+      res.status(404).json({message: "Endpoint not found."});
+    } else {
+      res.json({ message: "Endpoint successfully deleted" });
+    }
+  }).catch(err => {
+    throw err;
   });
 });
 
