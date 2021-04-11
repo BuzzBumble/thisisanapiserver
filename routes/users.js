@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const reqTracker = require('../middleware/reqTracker');
-
+const authToken = require('../middleware/authToken');
 const dbUsers = require('../db/users');
 const pw = require('../helpers/passwords');
-
 const dbEndpoints= require('../db/endpoints');
+const jwt = require('jsonwebtoken');
 
 /* POST users */
 router.post('/', reqTracker, (req, res, next) => {
@@ -17,9 +17,14 @@ router.post('/', reqTracker, (req, res, next) => {
     const resultExists = result.rows !== undefined && result.rows.length > 0;
 
     if (!resultExists) {
+      const token = jwt.sign({ username }, process.env.TOKEN_SECRET, {
+        algorithm: "HS256",
+        expiresIn: 300,
+      })
+
       pw.hashPassword(password).then(hash => {
         dbUsers.createUser(name, username, hash).then(result => {
-          res.status(201).json(result.rows[0]);
+          res.status(201).json({ jwt: token });
         }).catch(err => {
           throw err;
         });
@@ -36,7 +41,7 @@ router.post('/', reqTracker, (req, res, next) => {
 });
 
 /* GET user show. */
-router.get('/:id', reqTracker, (req, res, next) => {
+router.get('/:id', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
 
   dbUsers.getUserById(id).then(result => {
@@ -56,7 +61,7 @@ router.get('/:id', reqTracker, (req, res, next) => {
 });
 
 /* PUT user */
-router.put('/:id', reqTracker, (req, res, next) => {
+router.put('/:id', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
   let name = req.body.name;
   let username = req.body.username;
@@ -76,7 +81,7 @@ router.put('/:id', reqTracker, (req, res, next) => {
 });
 
 /* DELETE user */
-router.delete('/:id', reqTracker, (req, res, next) => {
+router.delete('/:id', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
   
   dbUsers.deleteUser(id).then(result => {
@@ -94,7 +99,7 @@ router.delete('/:id', reqTracker, (req, res, next) => {
 
 
 /* GET user endpoints index */
-router.get('/:id/endpoints', reqTracker, (req, res, next) => {
+router.get('/:id/endpoints', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
 
   dbEndpoints.getEndpointsByUserId(id).then(result => {
@@ -110,7 +115,7 @@ router.get('/:id/endpoints', reqTracker, (req, res, next) => {
 });
 
 /* POST user endpoints */
-router.post('/:id/endpoints/', reqTracker, (req, res, next) => {
+router.post('/:id/endpoints/', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
   let name = req.body.name;
   let data = req.body.data;
@@ -129,7 +134,7 @@ router.post('/:id/endpoints/', reqTracker, (req, res, next) => {
 });
 
 /* GET user endpoint show */
-router.get('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
+router.get('/:id/endpoints/:endpoint_name', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
   let name = req.params.endpoint_name;
 
@@ -147,7 +152,7 @@ router.get('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
 });
 
 /* PUT user endpoint */
-router.put('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
+router.put('/:id/endpoints/:endpoint_name', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
   let originalName = req.params.endpoint_name;
   let name = req.body.name;
@@ -167,7 +172,7 @@ router.put('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
 });
 
 /* DELETE user endpoint */
-router.delete('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
+router.delete('/:id/endpoints/:endpoint_name', authToken, reqTracker, (req, res, next) => {
   let id = req.params.id;
   let name = req.params.endpoint_name;
   
