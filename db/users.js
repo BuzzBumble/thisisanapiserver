@@ -36,7 +36,7 @@ const updateUser = (id, name, username) => {
         RETURNING name, username;
   `;
 
-  return pool.query(query, [id, name, username]);
+  return pool.query(query, [name, username, id]);
 };
 
 const deleteUser = (id) => {
