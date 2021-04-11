@@ -21,7 +21,7 @@ const createEndpoint = (userId, name, data) => {
 
 const getEndpointByName = (userId, name) => {
   const query = `
-  SELECT id, data FROM endpoints
+  SELECT id, name, data FROM endpoints
     WHERE user_id=$1 AND name=$2;
   `;
 

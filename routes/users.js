@@ -139,7 +139,9 @@ router.get('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
       res.status(404).json({message: "Endpoint not found."});
     } else {
       const endpoint = result.rows[0];
-      res.json(endpoint);
+      res.json({
+        endpoint
+      });
     }
   }).catch(err => {
     throw err;
@@ -159,6 +161,7 @@ router.put('/:id/endpoints/:endpoint_name', reqTracker, (req, res, next) => {
       res.status(404).json({message: "Endpoint not found."});
     } else {
       const endpoint = result.rows[0];
+      console.log(result.rows[0]);
       res.json(endpoint);
     }
   }).catch(err => {
