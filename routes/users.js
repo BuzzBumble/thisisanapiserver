@@ -17,13 +17,13 @@ router.post('/', reqTracker, (req, res, next) => {
     const resultExists = result.rows !== undefined && result.rows.length > 0;
 
     if (!resultExists) {
-      const token = jwt.sign({ username, id: result.rows[0].id }, process.env.TOKEN_SECRET, {
-        algorithm: "HS256",
-        expiresIn: 300,
-      })
 
       pw.hashPassword(password).then(hash => {
         dbUsers.createUser(name, username, hash).then(result => {
+          const token = jwt.sign({username, id: result.rows[0].id }, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: 300,
+          })
           res.status(201).json({ jwt: token });
         }).catch(err => {
           throw err;
