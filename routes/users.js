@@ -17,7 +17,7 @@ router.post('/', reqTracker, (req, res, next) => {
     const resultExists = result.rows !== undefined && result.rows.length > 0;
 
     if (!resultExists) {
-      const token = jwt.sign({ username }, process.env.TOKEN_SECRET, {
+      const token = jwt.sign({ username, id: result.rows[0].id }, process.env.TOKEN_SECRET, {
         algorithm: "HS256",
         expiresIn: 300,
       })

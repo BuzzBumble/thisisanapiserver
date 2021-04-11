@@ -15,7 +15,7 @@ router.post('/users', reqTracker, (req, res, next) => {
     if (!resultExists) {
       res.status(401).json({error: "User not found."});
     } else {
-      const token = jwt.sign({ username }, process.env.TOKEN_SECRET, {
+      const token = jwt.sign({ username, id: result.rows[0].id }, process.env.TOKEN_SECRET, {
         algorithm: "HS256",
         expiresIn: 600,
       })
@@ -37,19 +37,36 @@ router.post('/users', reqTracker, (req, res, next) => {
   });
 });
 
-/* DELETE auth/users */
-router.delete('/users/:id',  reqTracker,(req, res, next) => {
-
-});
-
 /* POST auth/admins */
 router.post('/admins', reqTracker, (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
 
-});
-
-/* DELETE auth/admins */
-router.delete('/admins/:id', reqTracker, (req, res, next) => {
-
+  dbUsers.getAdminByUsername(username).then(result => {
+    const resultExists = result.rowCount > 0;
+    if (!resultExists) {
+      res.status(401).json({error: "Admin not found."});
+    } else {
+      const token = jwt.sign({ username, id: result.rows[0].id }, process.env.TOKEN_SECRET, {
+        algorithm: "HS256",
+        expiresIn: 600,
+      })
+      const admin = result.rows[0];
+      pw.checkPassword(password, admin.password).then(same => {
+        if (same) {
+          res.status(201).json({ jwt: token });
+        } else {
+          res.status(401).json({error: "Wrong password" });
+        }
+      }).catch(err => {
+        // BCrypt Compare error
+        throw err;
+      });
+    }
+  }).catch(err => {
+    // Database error
+    throw err;
+  });
 });
 
 module.exports = router;

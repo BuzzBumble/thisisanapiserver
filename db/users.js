@@ -48,9 +48,19 @@ const deleteUser = (id) => {
   return pool.query(query, [id]);
 };
 
+const getAdminByUsername = (username) => {
+  const query = `
+  SELECT * FROM admins
+      WHERE username=$1;
+  `;
+
+  return pool.query(query, [username]);
+};
+
 module.exports = {
   getUserByUsername,
   getUserById,
+  getAdminByUsername,
   createUser,
   updateUser,
   deleteUser,
