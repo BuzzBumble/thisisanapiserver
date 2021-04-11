@@ -52,17 +52,8 @@
             "schema": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "integer"
-                },
-                "name": {
+                "jwt": {
                   "type": "string"
-                },
-                "username": {
-                  "type": "string"
-                },
-                "endpoint_count": {
-                  "type": "integer"
                 }
               }
             }
@@ -104,7 +95,12 @@
           "201": {
             "description": "Successfully logged in. Responds with user id.",
             "schema": {
-              "type": "number"
+              "type": "object",
+              "properties": {
+                "jwt": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -112,34 +108,6 @@
           },
           "401": {
             "description": "Invalid username/password supplied."
-          }
-        }
-      }
-    },
-    "/auth/users/{id}": {
-      "delete": {
-        "tags": [
-          "auth"
-        ],
-        "summary": "Logs user out of the system.",
-        "description": "",
-        "operationId": "logoutUser",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {
-          "204": {
-            "description": "Successfully logged out user."
-          },
-          "400": {
-            "description": "Invalid id supplied."
-          },
-          "401": {
-            "description": "User is not logged in."
-          },
-          "404": {
-            "description": "User does not exist."
           }
         }
       }
@@ -175,7 +143,12 @@
           "201": {
             "description": "Successfully logged in. Responds with admin id.",
             "schema": {
-              "type": "number"
+              "type": "object",
+              "properties": {
+                "jwt": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -183,34 +156,6 @@
           },
           "401": {
             "description": "Invalid username/password supplied."
-          }
-        }
-      }
-    },
-    "/auth/admins/{id}": {
-      "delete": {
-        "tags": [
-          "auth"
-        ],
-        "summary": "Logs admin out of the system.",
-        "description": "",
-        "operationId": "logoutAdmin",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "responses": {
-          "204": {
-            "description": "Successfully logged out admin."
-          },
-          "400": {
-            "description": "Invalid id supplied."
-          },
-          "401": {
-            "description": "Admin is not logged in."
-          },
-          "404": {
-            "description": "Admin does not exist."
           }
         }
       }
@@ -246,9 +191,6 @@
                 },
                 "username": {
                   "type": "string"
-                },
-                "endpoint_count": {
-                  "type": "integer"
                 }
               }
             }
@@ -258,6 +200,9 @@
           },
           "400": {
             "description": "Invalid id supplied."
+          },
+          "401": {
+            "description": "Unauthorized."
           },
           "404": {
             "description": "User not found."
@@ -306,15 +251,15 @@
                 },
                 "username": {
                   "type": "string"
-                },
-                "endpoint_count": {
-                  "type": "integer"
                 }
               }
             }
           },
           "400": {
             "description": "Invalid user parameters supplied."
+          },
+          "401": {
+            "description": "Unauthorized."
           },
           "404": {
             "description": "User not found."
@@ -346,6 +291,9 @@
           },
           "400": {
             "description": "Invalid id supplied"
+          },
+          "401": {
+            "description": "Unauthorized."
           },
           "404": {
             "description": "User not found"
@@ -530,6 +478,9 @@
           "400": {
             "description": "Invalid endpoint parameters supplied."
           },
+          "401": {
+            "description": "Unauthorized."
+          },
           "404": {
             "description": "Endpoint not found."
           }
@@ -567,6 +518,9 @@
           },
           "400": {
             "description": "Invalid id or name supplied"
+          },          
+          "401": {
+            "description": "Unauthorized."
           },
           "404": {
             "description": "Endpoint not found"
